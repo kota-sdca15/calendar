@@ -22,18 +22,24 @@ def make_calendar(_year,_month)
       7.times do |i|
         cal_count = n*7 + i
         calendar << '<td>'
-        calendar << '<a href="/' + _year.to_s + '/' + _month.to_s + '/' + ((cal_count - first_date.wday + 1).to_s if first_date.wday <= cal_count && last_date.day > cal_count - first_date.wday).to_s + '/">'
+        @cal_date = _year.to_s + '/' + _month.to_s + '/' + ((cal_count - first_date.wday + 1).to_s if first_date.wday <= cal_count && last_date.day > cal_count - first_date.wday).to_s
+        calendar << '<a href="/' + "#{@cal_date}" + '/">'
         calendar << (cal_count - first_date.wday + 1).to_s if first_date.wday <= cal_count && last_date.day > cal_count - first_date.wday
         calendar << '<br>'
-
-        # date = ((cal_count - first_date.wday + 1).to_s
-        # if first_date.wday <= cal_count && last_date.day > cal_count - first_date.wday).to_s
-       '@year' << "." << '@month' << "." << '@date' == @task_date
-          todo = Task.where("'@year' << "," << '@month' << "," << '@date'" == '@task_date')
-
-
-
         calendar << '</a>'
+        calendar << '<p>'
+        @date_plans = Array.new(0,nil)
+        Task.all.each do |task|
+          @date = task.date.strftime("%Y/%-m/%-d")
+          if @cal_date == @date
+            @date_plans.push(task.title)
+          end
+        end
+
+        calendar << "#{@date_plans.join(", ")}"
+
+
+        calendar << '</p>'
 
         calendar << '</td>'
       end
@@ -66,4 +72,20 @@ get '/calendar' do
   @month = ＠task_date.month
   @date = ＠task_date.day
   erb :calendar
+end
+
+get '/:year/:month/:date/' do
+  @year = params[:year].to_i
+  @month = params[:month].to_i
+  @date = params[:date].to_i
+  search = "#{@month}/#{@date}/#{@year}"
+  @date_plans = Array.new(0,nil)
+  Task.all.each do |task|
+    date = task.date.strftime("%-m/%-d/%Y")
+    if search == date
+      @date_plans.push(task.id)
+    end
+  end
+  @tasks = Task.where(id: @date_plans)
+  erb :date_plan
 end

@@ -9,8 +9,8 @@
 	<%= make_calendar(@year, @month) %>
 
 	<form action="/tasks" method="post">
-		<input type="date" name="date">
-		<input type="text" name="task">
+		<input type="date" name="date" required>
+		<input type="text" name="task" required>
 		<input type="submit" type="追加">
 	</form>
 

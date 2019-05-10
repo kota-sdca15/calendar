@@ -6,7 +6,12 @@
 	 <link rel="stylesheet" href="/assets/style.css" type="text/css">
 </head>
 <body>
-<h1>Calendar</h1>
+<a href="/calendar"><h1>Calendarに戻る</h1></a>
+  <p><%= @year %>年<%= @month %>月<%= @date %>日の予定</p>
+  <p><% @tasks.each do |task| %></p>
+    <p><%= task.title %></p>
+  <% end %>
+
 	<form action="/calendar" method="post">
 		<input type="text" name="year" placeholder="year" required>
 		<input type="text" name="month" placeholder="month" required>
