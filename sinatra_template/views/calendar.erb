@@ -6,6 +6,7 @@
 	 <link rel="stylesheet" href="/assets/style.css" type="text/css">
 </head>
 <body>
+<h2><%=@year%>年<%=@month%>月</h2>
 	<%= make_calendar(@year, @month) %>
 
 	<form action="/tasks" method="post">

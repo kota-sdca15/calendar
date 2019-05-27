@@ -54,9 +54,15 @@ get '/' do
    erb :index
 end
 
+get '/new' do
+  erb :new
+end
+
 post '/calendar' do
-  @year = params[:year].to_i
-  @month = params[:month].to_i
+  Calendar.create(name: params[:name],password: params[:password],password_confirmation: params[:password_confirmation],lock: params[:private])
+  d = Date.today
+  @year = d.year
+  @month = d.month
   erb :calendar
 end
 

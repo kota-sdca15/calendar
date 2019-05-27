@@ -8,3 +8,7 @@ end
 class Task < ActiveRecord::Base
 
 end
+
+class Calendar < ActiveRecord::Base
+  has_secure_password
+end

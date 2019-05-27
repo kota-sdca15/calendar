@@ -11,11 +11,5 @@
   <p><% @tasks.each do |task| %></p>
     <p><%= task.title %></p>
   <% end %>
-
-	<form action="/calendar" method="post">
-		<input type="text" name="year" placeholder="year" required>
-		<input type="text" name="month" placeholder="month" required>
-		<input type="submit" value="作成">
-	</form>
 </body>
 </html>

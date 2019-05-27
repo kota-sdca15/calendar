@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Calendar -new</title>
+</head>
+<body>
+  <h1>Calendar</h1>
+  <h2>新規作成</h2>
+  <form action="/calendar" method="post">
+    <input type="text" name="name" placeholder="名前" required>
+		<input type="text" name="password" placeholder="パスワード" required>
+    <input type="text" name="password_confirmation" placeholder="パスワードの確認" required>
+    <input type="checkbox" value="true">
+    <label for="private">パスワードを設定しますか？</label>
+    <input type="submit" value="作成">
+
+  </form>
+</body>
+</html>
