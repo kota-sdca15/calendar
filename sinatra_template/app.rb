@@ -59,15 +59,20 @@ get '/new' do
 end
 
 post '/calendar' do
-  Calendar.create(name: params[:name],password: params[:password],password_confirmation: params[:password_confirmation],lock: params[:private])
-  d = Date.today
-  @year = d.year
-  @month = d.month
-  erb :calendar
+  if Calendar.find_by(name: params[:name])
+    @message = "この名前は既に使用されています"
+    erb :new
+  else
+    Calendar.create(name: params[:name],password: params[:password],password_confirmation: params[:password_confirmation],lock: params[:private])
+    d = Date.today
+    @year = d.year
+    @month = d.month
+    erb :calendar
+  end
 end
 
 post '/tasks' do
-  Task.create(title: params[:task],date: params[:date])
+  Task.create(title: params[:title],date: params[:date])
   session[:date] = params[:date]
   redirect '/calendar'
 end

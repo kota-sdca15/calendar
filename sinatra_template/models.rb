@@ -6,7 +6,7 @@ if development?
 end
 
 class Task < ActiveRecord::Base
-
+  validates_presence_of :name
 end
 
 class Calendar < ActiveRecord::Base

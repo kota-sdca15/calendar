@@ -15,7 +15,10 @@
     <input type="text" name="password_confirmation" placeholder="パスワードの確認" required>
     <input type="checkbox" value="true">
     <label for="private">パスワードを設定しますか？</label>
-    <input type="submit" value="作成">
+    <input type="submit" value="作成"><br>
+    <% if @message %>
+      <p><%= @message %></p>
+    <% end %>
 
   </form>
 </body>
