@@ -8,12 +8,19 @@
 </head>
 <body>
   <h1>Calendar</h1>
-  <h2>新規作成</h2>
+  <% if !current_user.nil? %>
+    <li><%= current_user.name %>でログイン中</li>
+    <a href="/sign_out">ログアウト</a>
+  <% else %>
+    <a href="/sign_in">ログイン</a>
+    <a href="/sign_up">登録</a>
+  <% end %>
+  <h2>カレンダーを新規作成</h2>
   <form action="/calendar" method="post">
     <input type="text" name="name" placeholder="名前" required>
 		<input type="text" name="password" placeholder="パスワード" required>
     <input type="text" name="password_confirmation" placeholder="パスワードの確認" required>
-    <input type="checkbox" value="true">
+    <input type="checkbox" value="true" name="private">
     <label for="private">パスワードを設定しますか？</label>
     <input type="submit" value="作成"><br>
     <% if @message %>

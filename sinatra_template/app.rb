@@ -7,6 +7,12 @@ require './models'
 
 enable :sessions
 
+helpers do
+  def current_user
+    User.find_by(id: session[:user])
+  end
+end
+
 def make_calendar(_year,_month)
   first_date = Date.new(_year,_month,1)
   last_date = Date.new(_year,_month,-1)
@@ -63,7 +69,8 @@ post '/calendar' do
     @message = "この名前は既に使用されています"
     erb :new
   else
-    Calendar.create(name: params[:name],password: params[:password],password_confirmation: params[:password_confirmation],lock: params[:private])
+    make = Calendar.create(name: params[:name],password: params[:password],password_confirmation: params[:password_confirmation],lock: params[:private])
+    session[:calendar] = make.id
     d = Date.today
     @year = d.year
     @month = d.month
@@ -74,15 +81,7 @@ end
 post '/tasks' do
   Task.create(title: params[:title],date: params[:date])
   session[:date] = params[:date]
-  redirect '/calendar'
-end
-
-get '/calendar' do
-  ＠task_date = Date.parse("#{session[:date]}.to_i")
-  @year = ＠task_date.year
-  @month = ＠task_date.month
-  @date = ＠task_date.day
-  erb :calendar
+  redirect '/calendar/:name'
 end
 
 get '/:year/:month/:date/' do
@@ -100,3 +99,62 @@ get '/:year/:month/:date/' do
   @tasks = Task.where(id: @date_plans)
   erb :date_plan
 end
+
+post '/login' do
+  if Calendar.find_by(name: params[:name])
+    redirect "/calendar/#{params[:name]}"
+  end
+end
+
+get "/calendar/:name" do
+  Calendar.find_by(name: params[:name])
+  d = Date.today
+    @year = d.year
+    @month = d.month
+  erb :calendar
+end
+
+get '/sign_up' do
+  erb :sign_up
+end
+
+post '/sign_up' do
+  user = User.create(
+    name: params[:username],
+    email: params[:email],
+    password: params[:password],
+    password_confirmation: params[:password_confirmation]
+  )
+  if user.persisted?
+    session[:user] = user.id
+  end
+  redirect '/signed'
+end
+
+get '/sign_in' do
+  erb :sign_in
+end
+
+post '/sign_in' do
+  user = User.find_by(email: params[:email])
+  if user && user.authenticate(params[:password])
+    session[:user] = user.id
+    redirect '/signed'
+  else
+    redirect '/sign_in'
+  end
+end
+
+get '/sign_out' do
+  session[:user] = nil
+  redirect '/'
+end
+
+get '/signed' do
+  erb :signed
+end
+
+ post '/subscribe' do
+   User_Calendar.create(user_id: session[:user], calendar_id: session[:calendar])
+   redirect '/calendar/:name'
+ end

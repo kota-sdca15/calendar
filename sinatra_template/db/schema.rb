@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_24_100540) do
+ActiveRecord::Schema.define(version: 2019_06_21_093224) do
 
   create_table "calendars", force: :cascade do |t|
     t.text "name"
@@ -24,6 +24,19 @@ ActiveRecord::Schema.define(version: 2019_05_24_100540) do
   create_table "tasks", force: :cascade do |t|
     t.string "title"
     t.date "date"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.string "password_digest"
+    t.string "email"
+  end
+
+  create_table "users_calendars", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "calendar_id"
+    t.index ["calendar_id"], name: "index_users_calendars_on_calendar_id"
+    t.index ["user_id"], name: "index_users_calendars_on_user_id"
   end
 
 end
