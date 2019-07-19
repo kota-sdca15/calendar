@@ -11,7 +11,7 @@ end
 
 class Calendar < ActiveRecord::Base
   has_secure_password
-  validates :name, format: {with: /¥\w*/ }
+  # validates :name, format: {with: /¥\w*/ }
   has_many :user_calendars
   has_many :users, through: :user_calendars
 end
@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
   has_many :calendars, through: :user_calendars
 end
 
-class User_Calendar < ActiveRecord::Base
+class Users_Calendar < ActiveRecord::Base
   belongs_to :user
   belongs_to :calendar
 end

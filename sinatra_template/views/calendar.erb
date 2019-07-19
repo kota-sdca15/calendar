@@ -10,9 +10,13 @@
     <li><%= current_user.name %>でログイン中</li>
 		<a href="/signed">ホーム</a>
     <a href="/sign_out">ログアウト</a>
-		<form action="/subscribe" method="post">
-		<input type="submit" value="追加">
-		</form>
+		<% if @subscribe %>
+			<p>追加済み</p>
+			<% else %>
+				<form action="/subscribe" method="post">
+				<input type="submit" value="追加">
+				</form>
+			<% end %>
   <% else %>
     <a href="/sign_in">ログイン</a>
     <a href="/sign_up">登録</a>

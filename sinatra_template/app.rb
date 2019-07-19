@@ -71,10 +71,12 @@ post '/calendar' do
   else
     make = Calendar.create(name: params[:name],password: params[:password],password_confirmation: params[:password_confirmation],lock: params[:private])
     session[:calendar] = make.id
+    session[:name] = params[:name]
     d = Date.today
     @year = d.year
     @month = d.month
-    erb :calendar
+    @subscribe = Users_Calendar.find_by(user_id: session[:user], calendar_id: session[:calendar])
+    redirect "/calendar/#{session[:name]}"
   end
 end
 
@@ -102,7 +104,8 @@ end
 
 post '/login' do
   if Calendar.find_by(name: params[:name])
-    redirect "/calendar/#{params[:name]}"
+    session[:name] = params[:name]
+    redirect "/calendar/#{session[:name]}"
   end
 end
 
@@ -111,6 +114,7 @@ get "/calendar/:name" do
   d = Date.today
     @year = d.year
     @month = d.month
+  @subscribe = Users_Calendar.find_by(user_id: session[:user], calendar_id: session[:calendar])
   erb :calendar
 end
 
@@ -151,10 +155,12 @@ get '/sign_out' do
 end
 
 get '/signed' do
+  subscribed = Users_Calendar.where(user_id: session[:user])
+  @calid = subscribed.pluck(:calendar_id)
   erb :signed
 end
 
  post '/subscribe' do
-   User_Calendar.create(user_id: session[:user], calendar_id: session[:calendar])
-   redirect '/calendar/:name'
+   Users_Calendar.create(user_id: session[:user], calendar_id: session[:calendar])
+   redirect "/calendar/#{session[:name]}"
  end
