@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>calendar</title>
+	 <link rel="stylesheet" href="/assets/style.css" type="text/css">
+</head>
+<body>
+<% if !current_user.nil? %>
+    <li><%= current_user.name %>でログイン中</li>
+		<a href="/signed">ホーム</a>
+    <a href="/sign_out">ログアウト</a>
+		<% if @subscribe %>
+			<p>追加済み</p>
+			<% else %>
+				<form action="/subscribe" method="post">
+				<input type="submit" value="追加">
+				</form>
+			<% end %>
+  <% else %>
+    <a href="/sign_in">ログイン</a>
+    <a href="/sign_up">登録</a>
+  <% end %>
+<h2><%=@year%>年<%=@month%>月</h2>
+	<%= make_calendar(@year, @month) %>
+
+	<form action="/tasks" method="post">
+		<input type="date" name="date" required>
+		<input type="text" name="title" required>
+		<input type="submit" value="追加">
+	</form>
+
+</body>
+</html>
