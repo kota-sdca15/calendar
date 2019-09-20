@@ -4,10 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="/assets/style.css" type="text/css">
   <title>Calendar -new</title>
 </head>
 <body>
+<div id="header">
   <h1>Calendar</h1>
+</div>
   <% if !current_user.nil? %>
     <li><%= current_user.name %>でログイン中</li>
     <a href="/sign_out">ログアウト</a>

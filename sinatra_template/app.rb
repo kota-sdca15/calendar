@@ -20,7 +20,7 @@ def make_calendar(_year,_month)
   calendar_size = last_date.day + first_date.wday - last_date.wday + 6
 
    calendar = ""
-    calendar << '<table>' + "\n"
+    calendar << '<table class="table table-bordered">' + "\n"
     calendar << "\t" + '<tr><td>日</td><td>月</td><td>火</td><td>水</td><td>木</td><td>金</td><td>土</td></tr>' + "\n"
 
     (calendar_size / 7).times do |n|
@@ -29,13 +29,13 @@ def make_calendar(_year,_month)
         cal_count = n*7 + i
         calendar << '<td>'
         @cal_date = _year.to_s + '/' + _month.to_s + '/' + ((cal_count - first_date.wday + 1).to_s if first_date.wday <= cal_count && last_date.day > cal_count - first_date.wday).to_s
-        calendar << '<a href="/' + "#{@cal_date}" + '/">'
+        calendar << '<a href="/' + "#{session[:name]}"'/' + "#{@cal_date}" + '/">'
         calendar << (cal_count - first_date.wday + 1).to_s if first_date.wday <= cal_count && last_date.day > cal_count - first_date.wday
         calendar << '<br>'
         calendar << '</a>'
         calendar << '<p>'
         @date_plans = Array.new(0,nil)
-        Task.all.each do |task|
+        Task.where(calendar_id: session[:calendar]).each do |task|
           @date = task.date.strftime("%Y/%-m/%-d")
           if @cal_date == @date
             @date_plans.push(task.title)
@@ -81,18 +81,19 @@ post '/calendar' do
 end
 
 post '/tasks' do
-  Task.create(title: params[:title],date: params[:date])
+  Task.create(title: params[:title],date: params[:date],calendar_id: session[:calendar])
   session[:date] = params[:date]
-  redirect '/calendar/:name'
+
+  redirect "/calendar/#{session[:name]}"
 end
 
-get '/:year/:month/:date/' do
+get '/:name/:year/:month/:date/' do
   @year = params[:year].to_i
   @month = params[:month].to_i
   @date = params[:date].to_i
   search = "#{@month}/#{@date}/#{@year}"
   @date_plans = Array.new(0,nil)
-  Task.all.each do |task|
+  Task.where(calendar_id: session[:calendar]).each do |task|
     date = task.date.strftime("%-m/%-d/%Y")
     if search == date
       @date_plans.push(task.id)
@@ -103,14 +104,18 @@ get '/:year/:month/:date/' do
 end
 
 post '/login' do
-  if Calendar.find_by(name: params[:name])
+  login = Calendar.find_by(name: params[:name])
+  if login
     session[:name] = params[:name]
+    session[:calendar] = login.id
     redirect "/calendar/#{session[:name]}"
   end
 end
 
 get "/calendar/:name" do
-  Calendar.find_by(name: params[:name])
+  cal = Calendar.find_by(name: params[:name])
+  session[:calendar] = cal.id
+  session[:name] = cal.name
   d = Date.today
     @year = d.year
     @month = d.month
@@ -155,8 +160,10 @@ get '/sign_out' do
 end
 
 get '/signed' do
+  session[:calendar] = nil
   subscribed = Users_Calendar.where(user_id: session[:user])
-  @calid = subscribed.pluck(:calendar_id)
+  calid = subscribed.pluck(:calendar_id)
+  @cals = Calendar.where(id: calid)
   erb :signed
 end
 

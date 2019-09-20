@@ -24,6 +24,8 @@ ActiveRecord::Schema.define(version: 2019_06_21_093224) do
   create_table "tasks", force: :cascade do |t|
     t.string "title"
     t.date "date"
+    t.integer "calendar_id"
+    t.index ["calendar_id"], name: "index_tasks_on_calendar_id"
   end
 
   create_table "users", force: :cascade do |t|

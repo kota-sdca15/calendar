@@ -7,6 +7,7 @@ end
 
 class Task < ActiveRecord::Base
   validates_presence_of :title
+  belongs_to :calendar
 end
 
 class Calendar < ActiveRecord::Base
@@ -14,6 +15,7 @@ class Calendar < ActiveRecord::Base
   # validates :name, format: {with: /¥\w*/ }
   has_many :user_calendars
   has_many :users, through: :user_calendars
+  has_many :tasks
 end
 
 class User < ActiveRecord::Base
