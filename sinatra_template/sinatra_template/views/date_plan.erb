@@ -4,12 +4,30 @@
 	<meta charset="UTF-8">
 	<title>calendar</title>
 	 <link rel="stylesheet" href="/assets/style.css" type="text/css">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<a href="/calendar/<%= session[:name] %>"><h1>Calendarに戻る</h1></a>
-  <p><%= @year %>年<%= @month %>月<%= @date %>日の予定</p>
-  <p><% @tasks.each do |task| %></p>
-    <p><%= task.title %></p>
+<nav class="navbar navbar-dark bg-primary">
+  <a class="navbar-brand" href="#">
+    Calendar
+  </a>
+</nav>
+<% if !current_user.nil? %>
+    <li class="mt-2 ml-2"><%= current_user.name %>でログイン中</li>
+		<a href="/signed" class="ml-2">ホーム</a>
+    <a href="/sign_out" class="ml-2">ログアウト</a>
+  <% else %>
+    <a href="/sign_in">ログイン</a>
+    <a href="/sign_up">登録</a>
   <% end %>
+<a href="/calendar/<%= session[:name] %>" class="ml-2"><h3>Calendarに戻る</h3></a>
+  <p class="ml-2"><%= @year %>年<%= @month %>月<%= @date %>日の予定</p>
+  <p class="ml-2"><% @tasks.each do |task| %></p>
+    <li class="ml-2"><%= task.title %></li>
+  <% end %>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>

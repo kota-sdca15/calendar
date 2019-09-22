@@ -20,7 +20,7 @@ def make_calendar(_year,_month)
   calendar_size = last_date.day + first_date.wday - last_date.wday + 6
 
    calendar = ""
-    calendar << '<table>' + "\n"
+    calendar << '<table class="table table-bordered">' + "\n"
     calendar << "\t" + '<tr><td>日</td><td>月</td><td>火</td><td>水</td><td>木</td><td>金</td><td>土</td></tr>' + "\n"
 
     (calendar_size / 7).times do |n|
@@ -29,7 +29,7 @@ def make_calendar(_year,_month)
         cal_count = n*7 + i
         calendar << '<td>'
         @cal_date = _year.to_s + '/' + _month.to_s + '/' + ((cal_count - first_date.wday + 1).to_s if first_date.wday <= cal_count && last_date.day > cal_count - first_date.wday).to_s
-        calendar << '<a href="/' + "#{@cal_date}" + '/">'
+        calendar << '<a href="/' + "#{session[:name]}"'/' + "#{@cal_date}" + '/">'
         calendar << (cal_count - first_date.wday + 1).to_s if first_date.wday <= cal_count && last_date.day > cal_count - first_date.wday
         calendar << '<br>'
         calendar << '</a>'
@@ -87,7 +87,7 @@ post '/tasks' do
   redirect "/calendar/#{session[:name]}"
 end
 
-get '/:year/:month/:date/' do
+get '/:name/:year/:month/:date/' do
   @year = params[:year].to_i
   @month = params[:month].to_i
   @date = params[:date].to_i
@@ -108,6 +108,7 @@ post '/login' do
   if login
     session[:name] = params[:name]
     session[:calendar] = login.id
+    session[:user] = nil
     redirect "/calendar/#{session[:name]}"
   end
 end
@@ -145,7 +146,7 @@ get '/sign_in' do
 end
 
 post '/sign_in' do
-  user = User.find_by(email: params[:email])
+  user = User.find_by(name: params[:username])
   if user && user.authenticate(params[:password])
     session[:user] = user.id
     redirect '/signed'
